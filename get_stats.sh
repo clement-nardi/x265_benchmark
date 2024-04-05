@@ -8,14 +8,11 @@ video_name=$(basename "$video_path")
 video_duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$video_path")
 
 osize=$(stat -c%s "$video_path")
-for p in ultrafast superfast veryfast faster fast medium slow slower veryslow ; do
-	echo -n ";$p;$p;$p"
-done
-echo
-echo "CRF;VMAF;Size;Time;VMAF;Size;Time;VMAF;Size;Time;VMAF;Size;Time;VMAF;Size;Time;VMAF;Size;Time;VMAF;Size;Time;VMAF;Size;Time;VMAF;Size"
+
+echo "CRF;Preset;VMAF;Size;Time"
 for i in $(seq 15 30) ; do 
-	echo -n "$i;"
 	for p in ultrafast superfast veryfast faster fast medium slow slower veryslow ; do
+		echo -n "$i;$p;"
 
 		video_file_path="${script_dir}/outputs/${video_name}_${i}_${p}.mp4"
 		vmaf_json="${video_file_path}-vmaf.json"
@@ -42,6 +39,6 @@ for i in $(seq 15 30) ; do
 		else
 			echo -n ";"
 		fi
+		echo
 	done
-	echo
 done
